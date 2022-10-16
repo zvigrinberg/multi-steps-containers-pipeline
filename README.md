@@ -1,12 +1,12 @@
-# Multi steps container Pipeline
+# Multi steps container CI/CD Pipeline
 
 - Run unitest.
 - Run Build/compilation of application.
+- Run static code analysis on code.
 - Build image of binary.
 - Push image to remote registry.
 - Run instance of app in dind.
 - Run Integration test.
-- Run static code analysis on code.
-- Run security scan on image (clair, anchor, stackrox).
+- Run security scan on image (clair, anchore, stackrox).
 - Dispose test instance.
 - Deploy to lower environment. 
