@@ -1,4 +1,4 @@
-# Multi steps container CI/CD Pipeline
+8# Multi steps container CI/CD Pipeline
 
 - Run unitest.
 - Run Build/compilation of application.
@@ -9,4 +9,5 @@
 - Run Integration test.
 - Run security scan on image (clair, anchore, stackrox).
 - Dispose test instance.
-- Deploy to lower environment. 
+- Deploy to lower environment.
+- Implement advanced deployment models like canary deployment and blue/green deployment
