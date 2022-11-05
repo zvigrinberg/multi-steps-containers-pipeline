@@ -33,7 +33,7 @@ echo "127.0.0.1 127.0.0.1.podman.io" | sudo tee -a /etc/hosts
 ```
 3. open sonatype nexus Web UI
 ```shell
-xdg-open http://127.0.0.1 127.0.0.1.podman.io:8081
+xdg-open http://127.0.0.1.podman.io:8081
 ```
  
  4. Sign in to nexus using credentials admin/$NEXUS_ADMIN_PASSWORD
