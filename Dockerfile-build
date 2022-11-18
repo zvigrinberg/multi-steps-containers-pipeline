@@ -29,7 +29,6 @@ ARG REGISTRY_SERVER
 ARG IMAGE_NAME
 ARG IMAGE_TAG
 WORKDIR /usr/src/app
-# Copy all packages instead of rerunning pip install
 
 COPY --from=builder /usr/src/mymaven/src/target/*.jar ./
 WORKDIR /usr/src
