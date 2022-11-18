@@ -64,7 +64,7 @@ xdg-open http://127.0.0.1.podman.io:8081
  podman login --tls-verify=false 127.0.0.1.podman.io -u admin -p $NEXUS_ADMIN_PASSWORD
  ```
  
- 8. pull from docker hub some image and push it to the new registry
+ 8. For validating Nexus deployment, please pull from docker hub some image and push it to the new registry
  ```shell
  podman pull nginx
  podman tag docker.io/library/nginx:latest 127.0.0.1.podman.io/podman-hub/nginx:latest
