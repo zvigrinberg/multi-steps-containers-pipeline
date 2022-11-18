@@ -1,0 +1,39 @@
+ARG REGISTRY_SERVER
+ARG IMAGE_NAME
+ARG IMAGE_TAG
+FROM maven as builder
+
+# run unit-test and build binary
+COPY pom.xml /usr/src/mymaven/pom.xml
+COPY Dockerfile /usr/src/mymaven/Dockerfile
+ADD src/ /usr/src/mymaven/src
+
+WORKDIR /usr/src/mymaven/
+RUN mvn clean test
+RUN mvn clean package
+
+
+
+
+#Run Static code Analysis
+FROM newtmitch/sonar-scanner as sonarqube
+WORKDIR /usr/src
+COPY ./sonar-project.properties /usr/lib/sonar-scanner/conf/sonar-scanner.properties
+COPY --from=builder /usr/src/mymaven/src ./
+RUN sonar-scanner -Dsonar.projectBaseDir=/usr/src
+
+
+# Build image and push to registry using Buildah
+FROM buildah as imageBuild
+ARG REGISTRY_SERVER
+ARG IMAGE_NAME
+ARG IMAGE_TAG
+WORKDIR /usr/src/app
+# Copy all packages instead of rerunning pip install
+
+COPY --from=builder /usr/src/mymaven/src/target/*.jar ./
+WORKDIR /usr/src
+COPY  --from builder /usr/src/mymaven/src/Dockerfile ./
+RUN buildah bud -t ${REGISTRY_SERVER}/${IMAGE_NAME}:${IMAGE_NAME}
+RUN push ${REGISTRY_SERVER}/${IMAGE_NAME}:${IMAGE_NAME}
+
