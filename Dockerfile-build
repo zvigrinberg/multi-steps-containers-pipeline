@@ -40,3 +40,22 @@ COPY  --from builder /usr/src/mymaven/src/Dockerfile ./
 RUN buildah bud -t ${REGISTRY_SERVER}/${IMAGE_NAME}:${IMAGE_NAME}
 RUN push ${REGISTRY_SERVER}/${IMAGE_NAME}:${IMAGE_NAME}
 
+# Scan for created container image' vulnerabilities with policy, needs a running anchore-engine instance
+#ANCHORE_CLI_URL=http://myserver.example.com:8228/v1
+#ANCHORE_CLI_USER=admin
+#ANCHORE_CLI_PASS=foobar
+#ANCHORE_CLI_SSL_VERIFY=n
+
+FROM anchore/anchore-engine:v1.1.0
+ARG REGISTRY_SERVER
+ARG IMAGE_NAME
+ARG IMAGE_TAG
+ARG REGISTRY_USER
+ARG REGISTRY_PASSWORD
+
+cp policy-vuln-up-to-medium.json /path/to/policy/policy-vuln-up-to-medium.json
+RUN anchore-cli policy add /path/to/policy/policy-vuln-up-to-medium.json
+    && anchore-cli policy list | grep -v Policy | awk '{print $1}' | xargs -i anchore-cli policy activate {}
+    && anchore-cli evaluate check ${REGISTRY_SERVER}/${IMAGE_NAME}:${IMAGE_NAME}
+    && anchore-cli image vuln ${REGISTRY_SERVER}/${IMAGE_NAME}:${IMAGE_NAME} all
+    && anchore-cli evaluate check ${REGISTRY_SERVER}/${IMAGE_NAME}:${IMAGE_NAME}
