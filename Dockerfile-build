@@ -53,7 +53,7 @@ ARG IMAGE_TAG
 ARG REGISTRY_USER
 ARG REGISTRY_PASSWORD
 
-cp policy-vuln-up-to-medium.json /path/to/policy/policy-vuln-up-to-medium.json
+COPY policy-vuln-up-to-medium.json /path/to/policy/policy-vuln-up-to-medium.json
 RUN anchore-cli policy add /path/to/policy/policy-vuln-up-to-medium.json
     && anchore-cli policy list | grep -v Policy | awk '{print $1}' | xargs -i anchore-cli policy activate {}
     && anchore-cli evaluate check ${REGISTRY_SERVER}/${IMAGE_NAME}:${IMAGE_NAME}
